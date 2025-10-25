@@ -1,26 +1,112 @@
-const mysql = require('mysql2/promise');
-require('dotenv').config();
+const pool = require('../config/db');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT || 3306,        // ← Asegúrate de tener el puerto
-  waitForConnections: true,
-  connectionLimit: 5,        // ← ¡AHORA SÍ! Máximo 5
-  queueLimit: 0,
-  connectTimeout: 10000,    // ← Buenas prácticas
-  acquireTimeout: 10000
-});
+// =========================
+// REGISTRO DE USUARIO
+// =========================
+const register = async (req, res) => {
+  try {
+    const { first_name, last_name, email, password, phone_number } = req.body;
 
-// === GRACEFUL SHUTDOWN (IMPORTANTE EN RENDER) ===
-const shutdown = async () => {
-  console.log('Cerrando pool de conexiones MySQL...');
-  await pool.end();
+    // Validar datos obligatorios
+    if (!first_name || !last_name || !email || !password) {
+      return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: 'Email inválido' });
+    }
+
+    // Verificar si el email ya existe
+    const [existingUser] = await pool.query(
+      'SELECT email FROM users WHERE email = ?',
+      [email]
+    );
+
+    if (existingUser.length > 0) {
+      return res.status(400).json({ message: 'El email ya está registrado' });
+    }
+
+    // Encriptar contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insertar usuario (role_id = 3 por defecto)
+    await pool.query(
+      'INSERT INTO users (role_id, first_name, last_name, email, password_hash, phone_number) VALUES (?, ?, ?, ?, ?, ?)',
+      [3, first_name, last_name, email, hashedPassword, phone_number || null]
+    );
+
+    res.status(201).json({ message: 'Usuario registrado exitosamente' });
+
+  } catch (error) {
+    console.error('Error en registro:', error);
+    res.status(500).json({ message: 'Error al registrar usuario' });
+  }
 };
 
-process.on('SIGTERM', shutdown);
-process.on('SIGINT', shutdown);
+// =========================
+// LOGIN DE USUARIO
+// =========================
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-module.exports = pool;
+    // Validar datos obligatorios
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email y contraseña son obligatorios' });
+    }
+
+    // Buscar usuario por email
+    const [users] = await pool.query(
+      'SELECT user_id, role_id, first_name, last_name, email, password_hash FROM users WHERE email = ?',
+      [email]
+    );
+
+    if (users.length === 0) {
+      return res.status(401).json({ message: 'Email o contraseña incorrectos' });
+    }
+
+    const user = users[0];
+
+    // Verificar contraseña
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ message: 'Email o contraseña incorrectos' });
+    }
+
+    // Crear token JWT
+    const token = jwt.sign(
+      {
+        user_id: user.user_id,
+        role_id: user.role_id,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    res.json({
+      message: 'Login exitoso',
+      token,
+      user: {
+        user_id: user.user_id,
+        role_id: user.role_id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email
+      }
+    });
+
+  } catch (error) {
+    console.error('Error en login:', error);
+    res.status(500).json({ message: 'Error al iniciar sesión' });
+  }
+};
+
+module.exports = { register, login };
