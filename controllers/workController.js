@@ -37,7 +37,7 @@ const createWork = async (req, res) => {
 
     // Insertar trabajo walk-in (sin client_id)
     const [result] = await connection.query(
-      `INSERT INTO Appointments 
+      `INSERT INTO appointments 
        (client_id, is_walkin, client_name_walkin, manicurist_id, service_id, start_time, end_time, status) 
        VALUES (NULL, TRUE, ?, ?, ?, ?, ?, 'Completada')`,
       [client_name || 'Cliente Walk-in', manicuristId, service_id, startDate, endDate]
@@ -85,7 +85,7 @@ const getMyWorks = async (req, res) => {
         c.commission_amount,
         c.is_paid,
         c.payment_date
-      FROM Appointments a
+      FROM appointments a
       JOIN services s ON a.service_id = s.service_id
       LEFT JOIN Commissions c ON a.appointment_id = c.appointment_id
       WHERE a.manicurist_id = ? AND a.is_walkin = TRUE
@@ -146,7 +146,7 @@ const updateWork = async (req, res) => {
 
     // Verificar que el trabajo pertenece a la manicurista
     const [works] = await connection.query(
-      'SELECT manicurist_id, service_id FROM Appointments WHERE appointment_id = ? AND is_walkin = TRUE',
+      'SELECT manicurist_id, service_id FROM appointments WHERE appointment_id = ? AND is_walkin = TRUE',
       [id]
     );
 
@@ -199,7 +199,7 @@ const deleteWork = async (req, res) => {
 
     // Verificar que el trabajo pertenece a la manicurista
     const [works] = await connection.query(
-      'SELECT manicurist_id FROM Appointments WHERE appointment_id = ? AND is_walkin = TRUE',
+      'SELECT manicurist_id FROM appointments WHERE appointment_id = ? AND is_walkin = TRUE',
       [id]
     );
 
@@ -217,7 +217,7 @@ const deleteWork = async (req, res) => {
     await connection.query('DELETE FROM Commissions WHERE appointment_id = ?', [id]);
     
     // Eliminar trabajo
-    await connection.query('DELETE FROM Appointments WHERE appointment_id = ?', [id]);
+    await connection.query('DELETE FROM appointments WHERE appointment_id = ?', [id]);
     
     await connection.release();
 
@@ -274,7 +274,7 @@ const createWorkAdmin = async (req, res) => {
 
     // Insertar trabajo walk-in
     const [result] = await connection.query(
-      `INSERT INTO Appointments 
+      `INSERT INTO appointments 
        (client_id, is_walkin, client_name_walkin, manicurist_id, service_id, start_time, end_time, status) 
        VALUES (NULL, TRUE, ?, ?, ?, ?, ?, 'Completada')`,
       [client_name || 'Cliente Walk-in', manicurist_id, service_id, startDate, endDate]
@@ -324,7 +324,7 @@ const getAllWorks = async (req, res) => {
         c.commission_amount,
         c.is_paid,
         c.payment_date
-      FROM Appointments a
+      FROM appointments a
       JOIN users u ON a.manicurist_id = u.user_id
       JOIN services s ON a.service_id = s.service_id
       LEFT JOIN Commissions c ON a.appointment_id = c.appointment_id
