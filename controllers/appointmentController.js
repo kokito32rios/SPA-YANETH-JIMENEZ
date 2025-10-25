@@ -13,7 +13,7 @@ const createAppointment = async (req, res) => {
     const connection = await pool.getConnection();
 
     const [services] = await connection.query(
-      'SELECT duration_min, price, manicurist_commission_rate FROM Services WHERE service_id = ?',
+      'SELECT duration_min, price, manicurist_commission_rate FROM services WHERE service_id = ?',
       [service_id]
     );
 
@@ -30,7 +30,7 @@ const createAppointment = async (req, res) => {
 
     // Verificar disponibilidad
     const [conflicts] = await connection.query(
-      `SELECT appointment_id FROM Appointments 
+      `SELECT appointment_id FROM appointments 
        WHERE manicurist_id = ? AND status != 'Cancelada'
        AND ((start_time < ? AND end_time > ?) OR
             (start_time < ? AND end_time > ?) OR
@@ -45,7 +45,7 @@ const createAppointment = async (req, res) => {
 
     // Crear la cita
     const [result] = await connection.query(
-      `INSERT INTO Appointments (client_id, manicurist_id, service_id, start_time, end_time, status) 
+      `INSERT INTO appointments (client_id, manicurist_id, service_id, start_time, end_time, status) 
        VALUES (?, ?, ?, ?, ?, 'Agendada')`,
       [clientId, manicurist_id, service_id, startDate, endDate]
     );
@@ -86,7 +86,7 @@ const createAppointmentAdmin = async (req, res) => {
     const connection = await pool.getConnection();
 
     const [services] = await connection.query(
-      'SELECT duration_min, price, manicurist_commission_rate FROM Services WHERE service_id = ?',
+      'SELECT duration_min, price, manicurist_commission_rate FROM services WHERE service_id = ?',
       [service_id]
     );
 
@@ -103,7 +103,7 @@ const createAppointmentAdmin = async (req, res) => {
 
     // Verificar disponibilidad
     const [conflicts] = await connection.query(
-      `SELECT appointment_id FROM Appointments 
+      `SELECT appointment_id FROM appointments 
        WHERE manicurist_id = ? AND status != 'Cancelada'
        AND ((start_time < ? AND end_time > ?) OR
             (start_time < ? AND end_time > ?) OR
@@ -118,7 +118,7 @@ const createAppointmentAdmin = async (req, res) => {
 
     // Crear la cita
     const [result] = await connection.query(
-      `INSERT INTO Appointments (client_id, manicurist_id, service_id, start_time, end_time, status) 
+      `INSERT INTO appointments (client_id, manicurist_id, service_id, start_time, end_time, status) 
        VALUES (?, ?, ?, ?, ?, 'Agendada')`,
       [client_id, manicurist_id, service_id, startDate, endDate]
     );
@@ -157,9 +157,9 @@ const getClientAppointments = async (req, res) => {
       `SELECT a.appointment_id, a.start_time, a.end_time, a.status, a.client_comments,
               s.name as service_name, s.price,
               u.first_name, u.last_name
-       FROM Appointments a
-       JOIN Services s ON a.service_id = s.service_id
-       JOIN Users u ON a.manicurist_id = u.user_id
+       FROM appointments a
+       JOIN services s ON a.service_id = s.service_id
+       JOIN users u ON a.manicurist_id = u.user_id
        WHERE a.client_id = ?
        ORDER BY a.start_time DESC`,
       [clientId]
@@ -184,9 +184,9 @@ const getManicuristAppointments = async (req, res) => {
               s.name as service_name, s.price,
               u.first_name, u.last_name, u.phone_number,
               c.commission_amount, c.is_paid
-       FROM Appointments a
-       JOIN Services s ON a.service_id = s.service_id
-       JOIN Users u ON a.client_id = u.user_id
+       FROM appointments a
+       JOIN services s ON a.service_id = s.service_id
+       JOIN users u ON a.client_id = u.user_id
        LEFT JOIN Commissions c ON a.appointment_id = c.appointment_id
        WHERE a.manicurist_id = ?
        ORDER BY a.start_time DESC`,
@@ -211,10 +211,10 @@ const getAllAppointments = async (req, res) => {
               s.name as service_name, s.price,
               c.first_name as client_name, c.last_name as client_lastname,
               m.first_name as manicurist_name, m.last_name as manicurist_lastname
-       FROM Appointments a
-       JOIN Services s ON a.service_id = s.service_id
-       JOIN Users c ON a.client_id = c.user_id
-       JOIN Users m ON a.manicurist_id = m.user_id
+       FROM appointments a
+       JOIN services s ON a.service_id = s.service_id
+       JOIN users c ON a.client_id = c.user_id
+       JOIN users m ON a.manicurist_id = m.user_id
        ORDER BY a.start_time DESC`
     );
 
@@ -235,7 +235,7 @@ const cancelAppointment = async (req, res) => {
     const connection = await pool.getConnection();
 
     const [appointments] = await connection.query(
-      'SELECT client_id, manicurist_id FROM Appointments WHERE appointment_id = ?',
+      'SELECT client_id, manicurist_id FROM appointments WHERE appointment_id = ?',
       [id]
     );
 
@@ -252,7 +252,7 @@ const cancelAppointment = async (req, res) => {
     }
 
     await connection.query(
-      'UPDATE Appointments SET status = ? WHERE appointment_id = ?',
+      'UPDATE appointments SET status = ? WHERE appointment_id = ?',
       ['Cancelada', id]
     );
 
@@ -280,7 +280,7 @@ const updateAppointmentStatus = async (req, res) => {
     const connection = await pool.getConnection();
 
     const [appointments] = await connection.query(
-      'SELECT manicurist_id FROM Appointments WHERE appointment_id = ?',
+      'SELECT manicurist_id FROM appointments WHERE appointment_id = ?',
       [id]
     );
 
@@ -295,7 +295,7 @@ const updateAppointmentStatus = async (req, res) => {
     }
 
     await connection.query(
-      'UPDATE Appointments SET status = ? WHERE appointment_id = ?',
+      'UPDATE appointments SET status = ? WHERE appointment_id = ?',
       [status, id]
     );
 
@@ -317,7 +317,7 @@ const deleteAppointment = async (req, res) => {
     await connection.query('DELETE FROM Commissions WHERE appointment_id = ?', [id]);
     
     // Eliminar cita
-    await connection.query('DELETE FROM Appointments WHERE appointment_id = ?', [id]);
+    await connection.query('DELETE FROM appointments WHERE appointment_id = ?', [id]);
     
     await connection.release();
     res.json({ message: 'Cita eliminada exitosamente' });
