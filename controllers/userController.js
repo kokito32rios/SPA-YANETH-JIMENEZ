@@ -7,7 +7,7 @@ const getProfile = async (req, res) => {
     const connection = await pool.getConnection();
     const [users] = await connection.query(
       `SELECT user_id, role_id, first_name, last_name, email, phone_number, created_at 
-       FROM users WHERE user_id = ?`,
+       FROM Users WHERE user_id = ?`,
       [userId]
     );
     await connection.release();
@@ -35,7 +35,7 @@ const updateProfile = async (req, res) => {
 
     const connection = await pool.getConnection();
     await connection.query(
-      `UPDATE users SET first_name = ?, last_name = ?, phone_number = ? WHERE user_id = ?`,
+      `UPDATE Users SET first_name = ?, last_name = ?, phone_number = ? WHERE user_id = ?`,
       [first_name, last_name, phone_number || null, userId]
     );
     await connection.release();
@@ -48,12 +48,12 @@ const updateProfile = async (req, res) => {
 };
 
 // OBTENER TODOS LOS USUARIOS (Solo Administrador)
-const getAllusers = async (req, res) => {
+const getAllUsers = async (req, res) => {
   try {
     const { role_id } = req.query;
     const connection = await pool.getConnection();
 
-    let query = `SELECT user_id, role_id, first_name, last_name, email, phone_number, created_at FROM users`;
+    let query = `SELECT user_id, role_id, first_name, last_name, email, phone_number, created_at FROM Users`;
     let params = [];
 
     if (role_id) {
@@ -83,7 +83,7 @@ const updateUser = async (req, res) => {
 
     const connection = await pool.getConnection();
     await connection.query(
-      `UPDATE users SET first_name = ?, last_name = ?, phone_number = ?, role_id = ? WHERE user_id = ?`,
+      `UPDATE Users SET first_name = ?, last_name = ?, phone_number = ?, role_id = ? WHERE user_id = ?`,
       [first_name, last_name, phone_number || null, role_id, id]
     );
     await connection.release();
@@ -135,7 +135,7 @@ const getAvailableManicurists = async (req, res) => {
   try {
     const connection = await pool.getConnection();
     const [manicurists] = await connection.query(
-      `SELECT user_id, first_name, last_name, phone_number FROM users WHERE role_id = 2`
+      `SELECT user_id, first_name, last_name, phone_number FROM Users WHERE role_id = 2`
     );
     await connection.release();
 
@@ -149,7 +149,7 @@ const getAvailableManicurists = async (req, res) => {
 module.exports = { 
   getProfile, 
   updateProfile, 
-  getAllusers,
+  getAllUsers,
   updateUser,
   deleteUser,
   getAvailableManicurists
