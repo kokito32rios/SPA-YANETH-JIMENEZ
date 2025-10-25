@@ -76,7 +76,7 @@ const login = async (req, res) => {
 
     // Buscar usuario por email
     const [users] = await connection.query(
-      'SELECT user_id, role_id, first_name, last_name, email, password_hash FROM Users WHERE email = ?',
+      'SELECT user_id, role_id, first_name, last_name, email, password_hash FROM users WHERE email = ?',
       [email]
     );
 
