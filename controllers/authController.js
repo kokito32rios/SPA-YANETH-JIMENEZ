@@ -26,7 +26,7 @@ const register = async (req, res) => {
 
     // Verificar si el email ya existe
     const [existingUser] = await connection.query(
-      'SELECT email FROM Users WHERE email = ?',
+      'SELECT email FROM users WHERE email = ?',
       [email]
     );
 
@@ -42,7 +42,7 @@ const register = async (req, res) => {
 
     // Insertar usuario (role_id = 3 para cliente por defecto)
     await connection.query(
-      'INSERT INTO Users (role_id, first_name, last_name, email, password_hash, phone_number) VALUES (?, ?, ?, ?, ?, ?)',
+      'INSERT INTO users (role_id, first_name, last_name, email, password_hash, phone_number) VALUES (?, ?, ?, ?, ?, ?)',
       [3, first_name, last_name, email, hashedPassword, phone_number || null]
     );
 
