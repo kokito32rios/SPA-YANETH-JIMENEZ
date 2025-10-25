@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Cuenta - SPA Yaneth Jiménez</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+  </head>
+  <body>
+    <div class="dashboard">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>✨ Mi Cuenta</h3>
+          <p id="userNameClient">Cliente</p>
+        </div>
+        <nav class="sidebar-menu">
+          <a href="#" class="menu-item active" data-section="appointments"
+            >📅 Mis Citas</a
+          >
+          <a href="#" class="menu-item" data-section="services">💅 Servicios</a>
+          <a href="#" class="menu-item" data-section="profile">⚙️ Perfil</a>
+        </nav>
+        <div
+          style="
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+          "
+        >
+          <button class="logout-btn" style="width: 100%" onclick="logout()">
+            🚪 Cerrar Sesión
+          </button>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content">
+        <div class="content-header">
+          <h2>Bienvenido a SPA Yaneth Jiménez</h2>
+          <button class="hamburger show-mobile" id="hamburgerBtn">☰</button>
+        </div>
+
+        <!-- APPOINTMENTS SECTION -->
+        <section id="appointments" class="content-section active">
+          <div class="card">
+            <div
+              class="card-header"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <h3>📅 Mis Citas</h3>
+              <button
+                class="btn btn-primary"
+                onclick="openBookAppointmentModal()"
+              >
+                + Agendar Cita
+              </button>
+            </div>
+            <div class="card-body">
+              <div id="appointmentsListClient"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SERVICES SECTION -->
+        <section id="services" class="content-section" style="display: none">
+          <div class="card">
+            <div class="card-header">
+              <h3>💅 Nuestros Servicios</h3>
+            </div>
+            <div class="card-body">
+              <div class="services-grid" id="servicesListClient"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PROFILE SECTION -->
+        <section id="profile" class="content-section" style="display: none">
+          <div class="card">
+            <div class="card-header">
+              <h3>⚙️ Mi Perfil</h3>
+            </div>
+            <div class="card-body">
+              <form id="profileForm" class="auth-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="profileFirstName">Nombre</label>
+                    <input
+                      type="text"
+                      id="profileFirstName"
+                      name="first_name"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="profileLastName">Apellido</label>
+                    <input
+                      type="text"
+                      id="profileLastName"
+                      name="last_name"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="profileEmail">Email</label>
+                  <input type="email" id="profileEmail" disabled />
+                </div>
+                <div class="form-group">
+                  <label for="profilePhone">Teléfono</label>
+                  <input type="tel" id="profilePhone" name="phone_number" />
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  Guardar Cambios
+                </button>
+              </form>
+              <div id="message" class="message"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- MODAL AGENDAR CITA -->
+    <div id="bookAppointmentModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Agendar Nueva Cita</h2>
+          <button class="close-btn" onclick="closeBookAppointmentModal()">
+            &times;
+          </button>
+        </div>
+        <form id="bookAppointmentForm" class="auth-form">
+          <div class="form-group">
+            <label for="appointmentService">Servicio</label>
+            <select id="appointmentService" name="service_id" required></select>
+          </div>
+          <div class="form-group">
+            <label for="appointmentManicurist">Manicurista</label>
+            <select
+              id="appointmentManicurist"
+              name="manicurist_id"
+              required
+            ></select>
+          </div>
+          <div class="form-group">
+            <label for="appointmentDateTime">Fecha y Hora</label>
+            <input
+              type="datetime-local"
+              id="appointmentDateTime"
+              name="start_time"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">
+            Agendar Cita
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2024 SPA Yaneth Jiménez. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/auth.js"></script>
+  </body>
+</html>

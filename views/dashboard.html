@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - SPA Yaneth Jiménez</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+  </head>
+  <body>
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      "
+    >
+      <div style="text-align: center">
+        <h2 style="color: #e91e63">Cargando...</h2>
+        <p>Por favor espera mientras te redirigimos</p>
+      </div>
+    </div>
+
+    <script>
+      const user = localStorage.getItem("user");
+      if (!user) {
+        window.location.href = "/login";
+      } else {
+        const userData = JSON.parse(user);
+        const roleRedirects = {
+          1: "/dashboard/admin",
+          2: "/dashboard/manicurist",
+          3: "/dashboard/client",
+        };
+        window.location.href = roleRedirects[userData.role_id] || "/";
+      }
+    </script>
+  </body>
+</html>

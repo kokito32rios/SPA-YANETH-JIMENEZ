@@ -1,0 +1,444 @@
+/* TABLETS (768px and below) */
+@media (max-width: 768px) {
+
+    /* NAVBAR */
+    .navbar-menu {
+        gap: 15px;
+    }
+
+    .nav-link {
+        font-size: 14px;
+    }
+
+    .navbar-brand h1 {
+        font-size: 18px;
+    }
+
+    /* HERO SECTION */
+    .hero {
+        padding: 50px 0;
+    }
+
+    .hero-content h2 {
+        font-size: 32px;
+    }
+
+    .hero-content p {
+        font-size: 16px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+
+    /* SERVICES GRID */
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .service-card {
+        padding: 20px;
+    }
+
+    /* FORMS */
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-box {
+        padding: 30px;
+    }
+
+    /* DASHBOARD */
+    .dashboard {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        display: none;
+    }
+
+    .sidebar.show {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .sidebar-menu {
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .sidebar-menu a {
+        white-space: nowrap;
+        flex: 1;
+        border-left: none;
+        border-bottom: 4px solid transparent;
+        text-align: center;
+    }
+
+    .sidebar-menu a.active {
+        border-left: none;
+        border-bottom-color: var(--primary-color);
+    }
+
+    .content-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .content-header h2 {
+        font-size: 22px;
+    }
+
+    /* TABLES */
+    table {
+        font-size: 12px;
+    }
+
+    th,
+    td {
+        padding: 10px 5px;
+    }
+
+    /* MODAL */
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+
+    /* FOOTER */
+    footer {
+        margin-top: 30px;
+        padding: 20px;
+    }
+}
+
+/* MOBILE (480px and below) */
+@media (max-width: 480px) {
+
+    .container {
+        padding: 0 15px;
+    }
+
+    /* NAVBAR */
+    .navbar .container {
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px 15px;
+    }
+
+    .navbar-brand h1 {
+        font-size: 16px;
+    }
+
+    .navbar-menu {
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .nav-link {
+        font-size: 12px;
+        padding: 5px 0;
+    }
+
+    /* HERO SECTION */
+    .hero {
+        padding: 40px 0;
+    }
+
+    .hero-content h2 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .hero-content p {
+        font-size: 14px;
+        margin-bottom: 25px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+
+    /* SERVICES */
+    .services-preview h3 {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+
+    .service-card {
+        padding: 15px;
+    }
+
+    .service-icon {
+        font-size: 36px;
+    }
+
+    .service-card h4 {
+        font-size: 16px;
+    }
+
+    .service-card p {
+        font-size: 12px;
+    }
+
+    /* AUTHENTICATION */
+    .auth-main {
+        padding: 20px 15px;
+    }
+
+    .auth-container {
+        max-width: 100%;
+    }
+
+    .auth-box {
+        padding: 20px;
+    }
+
+    .auth-box h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .auth-form {
+        gap: 15px;
+    }
+
+    .form-group label {
+        font-size: 13px;
+    }
+
+    .form-group input {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    /* DASHBOARD */
+    .content-header {
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .content-header h2 {
+        font-size: 18px;
+    }
+
+    .logout-btn {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+
+    /* CARDS */
+    .card {
+        padding: 15px;
+    }
+
+    .card-header h3 {
+        font-size: 16px;
+    }
+
+    /* TABLES */
+    .table-responsive {
+        font-size: 11px;
+    }
+
+    th,
+    td {
+        padding: 8px 3px;
+    }
+
+    /* MODAL */
+    .modal-content {
+        width: 100%;
+        padding: 20px;
+        border-radius: 0;
+    }
+
+    .modal-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .modal-header h2 {
+        font-size: 18px;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    /* FOOTER */
+    footer {
+        font-size: 12px;
+        padding: 15px;
+    }
+}
+
+/* EXTRA SMALL (320px and below) */
+@media (max-width: 320px) {
+
+    .navbar-brand h1 {
+        font-size: 14px;
+    }
+
+    .hero-content h2 {
+        font-size: 18px;
+    }
+
+    .hero-content p {
+        font-size: 12px;
+    }
+
+    .btn {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+
+    .auth-box {
+        padding: 15px;
+    }
+
+    .auth-box h2 {
+        font-size: 18px;
+    }
+
+    .form-group input {
+        font-size: 12px;
+    }
+
+    table {
+        font-size: 10px;
+    }
+
+    th,
+    td {
+        padding: 5px 2px;
+    }
+}
+
+/* LANDSCAPE MODE */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero {
+        padding: 20px 0;
+    }
+
+    .hero-content h2 {
+        font-size: 24px;
+    }
+
+    .hero-content p {
+        font-size: 14px;
+    }
+
+    .auth-box {
+        padding: 20px;
+    }
+}
+
+/* TABLETS LANDSCAPE (1024px and below) */
+@media (max-width: 1024px) {
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .sidebar {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 200px;
+    }
+}
+
+/* SMALL DESKTOPS (1200px and below) */
+@media (max-width: 1200px) {
+    .container {
+        max-width: 90%;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+/* UTILITIES FOR DIFFERENT SCREEN SIZES */
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none !important;
+    }
+}
+
+/* Hide on desktop */
+@media (min-width: 769px) {
+    .show-mobile {
+        display: none !important;
+    }
+}
+
+/* Show hamburger menu button on mobile */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+        background: none;
+        border: none;
+        color: var(--primary-color);
+        font-size: 24px;
+        cursor: pointer;
+    }
+}
+
+@media (min-width: 769px) {
+    .hamburger {
+        display: none;
+    }
+}
+
+/* PRINT STYLES */
+@media print {
+
+    .navbar,
+    footer,
+    .logout-btn,
+    .btn {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    body {
+        background-color: white;
+    }
+
+    .card,
+    table {
+        page-break-inside: avoid;
+    }
+}

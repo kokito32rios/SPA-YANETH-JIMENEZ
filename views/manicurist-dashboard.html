@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel Manicurista - SPA Yaneth Jiménez</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+  </head>
+  <body>
+    <div class="dashboard">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>✨ Mi Panel</h3>
+          <p id="userNameManicurist">Manicurista</p>
+        </div>
+        <nav class="sidebar-menu">
+          <a href="#" class="menu-item active" data-section="appointments"
+            >📅 Mis Citas</a
+          >
+          <a href="#" class="menu-item" data-section="works">💼 Mis Trabajos</a>
+          <a href="#" class="menu-item" data-section="register-work"
+            >➕ Registrar Trabajo</a
+          >
+          <a href="#" class="menu-item" data-section="earnings"
+            >💰 Mis Ganancias</a
+          >
+          <a href="#" class="menu-item" data-section="profile">⚙️ Perfil</a>
+        </nav>
+        <div
+          style="
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+          "
+        >
+          <button class="logout-btn" style="width: 100%" onclick="logout()">
+            🚪 Cerrar Sesión
+          </button>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="main-content">
+        <div class="content-header">
+          <h2>Panel de Manicurista</h2>
+          <button class="hamburger show-mobile" id="hamburgerBtn">☰</button>
+        </div>
+
+        <!-- APPOINTMENTS SECTION -->
+        <section id="appointments" class="content-section active">
+          <div class="card">
+            <div class="card-header">
+              <h3>📅 Mis Citas Agendadas</h3>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Cliente</th>
+                      <th>Servicio</th>
+                      <th>Fecha y Hora</th>
+                      <th>Estado</th>
+                      <th>Precio</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="appointmentsTableManicurist">
+                    <tr>
+                      <td colspan="6" style="text-align: center">
+                        Cargando...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- REGISTER WORK SECTION -->
+        <section
+          id="register-work"
+          class="content-section"
+          style="display: none"
+        >
+          <div class="card">
+            <div class="card-header">
+              <h3>➕ Registrar Trabajo Realizado</h3>
+            </div>
+            <div class="card-body">
+              <form id="registerWorkForm" class="auth-form">
+                <div class="form-group">
+                  <label for="workDate">Fecha del Trabajo</label>
+                  <input
+                    type="datetime-local"
+                    id="workDate"
+                    name="work_date"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="workService">Servicio Realizado</label>
+                  <select id="workService" name="service_id" required>
+                    <option value="">Selecciona un servicio...</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="clientNameWalkin"
+                    >Nombre del Cliente (Opcional)</label
+                  >
+                  <input
+                    type="text"
+                    id="clientNameWalkin"
+                    name="client_name"
+                    placeholder="Ej: María Pérez"
+                  />
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="servicePriceDefault">Precio del Servicio</label>
+                    <input
+                      type="number"
+                      id="servicePriceDefault"
+                      name="service_price_custom"
+                      step="1"
+                      required
+                    />
+                    <small id="defaultPriceInfo" style="color: #666"
+                      >Precio por defecto del servicio</small
+                    >
+                  </div>
+
+                  <div class="form-group">
+                    <label for="commissionPreview">Tu Comisión</label>
+                    <input
+                      type="text"
+                      id="commissionPreview"
+                      disabled
+                      style="
+                        background: #e8f5e9;
+                        font-weight: bold;
+                        color: #2e7d32;
+                      "
+                    />
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                  💾 Guardar Trabajo
+                </button>
+              </form>
+              <div id="messageWork" class="message"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MY WORKS SECTION -->
+        <section id="works" class="content-section" style="display: none">
+          <div class="card">
+            <div class="card-header">
+              <h3>💼 Historial de Trabajos</h3>
+            </div>
+            <div class="card-body">
+              <!-- Filtros -->
+              <div
+                style="
+                  background: #f5f5f5;
+                  padding: 15px;
+                  border-radius: 8px;
+                  margin-bottom: 20px;
+                "
+              >
+                <h4 style="margin-bottom: 15px">Filtrar por Fecha</h4>
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr auto;
+                    gap: 10px;
+                  "
+                >
+                  <div class="form-group" style="margin: 0">
+                    <label for="filterStartDate">Desde</label>
+                    <input
+                      type="date"
+                      id="filterStartDate"
+                      style="width: 100%"
+                    />
+                  </div>
+                  <div class="form-group" style="margin: 0">
+                    <label for="filterEndDate">Hasta</label>
+                    <input type="date" id="filterEndDate" style="width: 100%" />
+                  </div>
+                  <div style="align-self: end">
+                    <button class="btn btn-primary" onclick="filterWorks()">
+                      Filtrar
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearFilters()">
+                      Limpiar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tarjetas de Resumen -->
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                  gap: 15px;
+                  margin-bottom: 30px;
+                "
+              >
+                <div
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      #667eea 0%,
+                      #764ba2 100%
+                    );
+                    color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                  "
+                >
+                  <h4
+                    style="margin-bottom: 10px; font-size: 14px; opacity: 0.9"
+                  >
+                    Total Trabajos
+                  </h4>
+                  <p
+                    style="font-size: 32px; font-weight: bold; margin: 0"
+                    id="totalWorksCount"
+                  >
+                    0
+                  </p>
+                </div>
+                <div
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      #f093fb 0%,
+                      #f5576c 100%
+                    );
+                    color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                  "
+                >
+                  <h4
+                    style="margin-bottom: 10px; font-size: 14px; opacity: 0.9"
+                  >
+                    Total Pagado Clientes
+                  </h4>
+                  <p
+                    style="font-size: 32px; font-weight: bold; margin: 0"
+                    id="totalClientPaid"
+                  >
+                    $0
+                  </p>
+                </div>
+                <div
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      #4facfe 0%,
+                      #00f2fe 100%
+                    );
+                    color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                  "
+                >
+                  <h4
+                    style="margin-bottom: 10px; font-size: 14px; opacity: 0.9"
+                  >
+                    Total Comisiones
+                  </h4>
+                  <p
+                    style="font-size: 32px; font-weight: bold; margin: 0"
+                    id="totalCommissionsWork"
+                  >
+                    $0
+                  </p>
+                </div>
+                <div
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      #43e97b 0%,
+                      #38f9d7 100%
+                    );
+                    color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                  "
+                >
+                  <h4
+                    style="margin-bottom: 10px; font-size: 14px; opacity: 0.9"
+                  >
+                    Comisiones Pagadas
+                  </h4>
+                  <p
+                    style="font-size: 28px; font-weight: bold; margin: 0"
+                    id="paidCommissionsWork"
+                  >
+                    $0
+                  </p>
+                </div>
+                <div
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      #fa709a 0%,
+                      #fee140 100%
+                    );
+                    color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                  "
+                >
+                  <h4
+                    style="margin-bottom: 10px; font-size: 14px; opacity: 0.9"
+                  >
+                    Comisiones Pendientes
+                  </h4>
+                  <p
+                    style="font-size: 28px; font-weight: bold; margin: 0"
+                    id="pendingCommissionsWork"
+                  >
+                    $0
+                  </p>
+                </div>
+              </div>
+
+              <!-- Tabla de Trabajos -->
+              <div class="table-responsive">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Cliente</th>
+                      <th>Servicio</th>
+                      <th>Precio Pagado</th>
+                      <th>Comisión</th>
+                      <th>Estado Pago</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody id="worksTableBody">
+                    <tr>
+                      <td colspan="7" style="text-align: center">
+                        Cargando...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- EARNINGS SECTION -->
+        <section id="earnings" class="content-section" style="display: none">
+          <div class="card">
+            <div class="card-header">
+              <h3>💰 Mis Ganancias</h3>
+            </div>
+            <div class="card-body">
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                  gap: 20px;
+                  margin-bottom: 30px;
+                "
+              >
+                <div
+                  style="
+                    background: #4caf50;
+                    color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                  "
+                >
+                  <h4>Comisiones Pendientes</h4>
+                  <p
+                    style="font-size: 28px; font-weight: bold"
+                    id="pendingCommissions"
+                  >
+                    $0
+                  </p>
+                </div>
+                <div
+                  style="
+                    background: #2196f3;
+                    color: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                  "
+                >
+                  <h4>Comisiones Pagadas</h4>
+                  <p
+                    style="font-size: 28px; font-weight: bold"
+                    id="paidCommissions"
+                  >
+                    $0
+                  </p>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Cita</th>
+                      <th>Servicio</th>
+                      <th>Precio</th>
+                      <th>Comisión</th>
+                      <th>Estado</th>
+                      <th>Fecha Pago</th>
+                    </tr>
+                  </thead>
+                  <tbody id="commissionsTableManicurist">
+                    <tr>
+                      <td colspan="6" style="text-align: center">
+                        Cargando...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PROFILE SECTION -->
+        <section id="profile" class="content-section" style="display: none">
+          <div class="card">
+            <div class="card-header">
+              <h3>⚙️ Mi Perfil</h3>
+            </div>
+            <div class="card-body">
+              <form id="profileForm" class="auth-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="profileFirstName">Nombre</label>
+                    <input
+                      type="text"
+                      id="profileFirstName"
+                      name="first_name"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="profileLastName">Apellido</label>
+                    <input
+                      type="text"
+                      id="profileLastName"
+                      name="last_name"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="profileEmail">Email</label>
+                  <input type="email" id="profileEmail" disabled />
+                </div>
+                <div class="form-group">
+                  <label for="profilePhone">Teléfono</label>
+                  <input type="tel" id="profilePhone" name="phone_number" />
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  Guardar Cambios
+                </button>
+              </form>
+              <div id="message" class="message"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <p>&copy; 2024 SPA Yaneth Jiménez. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/auth.js"></script>
+  </body>
+</html>
