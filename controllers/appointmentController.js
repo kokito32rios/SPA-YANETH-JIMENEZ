@@ -57,7 +57,7 @@ const createAppointment = async (req, res) => {
     const commissionAmount = servicePrice * commissionRate;
 
     await connection.query(
-      `INSERT INTO Commissions (appointment_id, manicurist_id, service_price, commission_amount) 
+      `INSERT INTO commissions (appointment_id, manicurist_id, service_price, commission_amount) 
        VALUES (?, ?, ?, ?)`,
       [appointmentId, manicurist_id, servicePrice, commissionAmount]
     );
@@ -130,7 +130,7 @@ const createAppointmentAdmin = async (req, res) => {
     const commissionAmount = servicePrice * commissionRate;
 
     await connection.query(
-      `INSERT INTO Commissions (appointment_id, manicurist_id, service_price, commission_amount) 
+      `INSERT INTO commissions (appointment_id, manicurist_id, service_price, commission_amount) 
        VALUES (?, ?, ?, ?)`,
       [appointmentId, manicurist_id, servicePrice, commissionAmount]
     );
@@ -187,7 +187,7 @@ const getManicuristAppointments = async (req, res) => {
        FROM appointments a
        JOIN services s ON a.service_id = s.service_id
        JOIN users u ON a.client_id = u.user_id
-       LEFT JOIN Commissions c ON a.appointment_id = c.appointment_id
+       LEFT JOIN commissions c ON a.appointment_id = c.appointment_id
        WHERE a.manicurist_id = ?
        ORDER BY a.start_time DESC`,
       [manicuristId]
@@ -314,7 +314,7 @@ const deleteAppointment = async (req, res) => {
     const connection = await pool.getConnection();
 
     // Eliminar comisión primero (FK constraint)
-    await connection.query('DELETE FROM Commissions WHERE appointment_id = ?', [id]);
+    await connection.query('DELETE FROM commissions WHERE appointment_id = ?', [id]);
     
     // Eliminar cita
     await connection.query('DELETE FROM appointments WHERE appointment_id = ?', [id]);

@@ -47,7 +47,7 @@ const createWork = async (req, res) => {
 
     // Crear comisión automáticamente
     await connection.query(
-      `INSERT INTO Commissions 
+      `INSERT INTO commissions 
        (appointment_id, manicurist_id, service_price, commission_amount, is_paid) 
        VALUES (?, ?, ?, ?, FALSE)`,
       [workId, manicuristId, finalPrice, commissionAmount]
@@ -87,7 +87,7 @@ const getMyWorks = async (req, res) => {
         c.payment_date
       FROM appointments a
       JOIN services s ON a.service_id = s.service_id
-      LEFT JOIN Commissions c ON a.appointment_id = c.appointment_id
+      LEFT JOIN commissions c ON a.appointment_id = c.appointment_id
       WHERE a.manicurist_id = ? AND a.is_walkin = TRUE
     `;
 
@@ -171,7 +171,7 @@ const updateWork = async (req, res) => {
 
     // Actualizar comisión
     await connection.query(
-      `UPDATE Commissions 
+      `UPDATE commissions 
        SET service_price = ?, commission_amount = ? 
        WHERE appointment_id = ?`,
       [service_price_custom, newCommissionAmount, id]
@@ -214,7 +214,7 @@ const deleteWork = async (req, res) => {
     }
 
     // Eliminar comisión primero
-    await connection.query('DELETE FROM Commissions WHERE appointment_id = ?', [id]);
+    await connection.query('DELETE FROM commissions WHERE appointment_id = ?', [id]);
     
     // Eliminar trabajo
     await connection.query('DELETE FROM appointments WHERE appointment_id = ?', [id]);
@@ -284,7 +284,7 @@ const createWorkAdmin = async (req, res) => {
 
     // Crear comisión automáticamente
     await connection.query(
-      `INSERT INTO Commissions 
+      `INSERT INTO commissions 
        (appointment_id, manicurist_id, service_price, commission_amount, is_paid) 
        VALUES (?, ?, ?, ?, FALSE)`,
       [workId, manicurist_id, finalPrice, commissionAmount]
@@ -327,7 +327,7 @@ const getAllWorks = async (req, res) => {
       FROM appointments a
       JOIN users u ON a.manicurist_id = u.user_id
       JOIN services s ON a.service_id = s.service_id
-      LEFT JOIN Commissions c ON a.appointment_id = c.appointment_id
+      LEFT JOIN commissions c ON a.appointment_id = c.appointment_id
       WHERE a.is_walkin = TRUE
     `;
 
