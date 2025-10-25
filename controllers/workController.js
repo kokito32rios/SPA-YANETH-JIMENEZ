@@ -15,7 +15,7 @@ const createWork = async (req, res) => {
 
     // Obtener información del servicio
     const [services] = await connection.query(
-      'SELECT duration_min, price, manicurist_commission_rate FROM Services WHERE service_id = ?',
+      'SELECT duration_min, price, manicurist_commission_rate FROM services WHERE service_id = ?',
       [service_id]
     );
 
@@ -86,7 +86,7 @@ const getMyWorks = async (req, res) => {
         c.is_paid,
         c.payment_date
       FROM Appointments a
-      JOIN Services s ON a.service_id = s.service_id
+      JOIN services s ON a.service_id = s.service_id
       LEFT JOIN Commissions c ON a.appointment_id = c.appointment_id
       WHERE a.manicurist_id = ? AND a.is_walkin = TRUE
     `;
@@ -162,7 +162,7 @@ const updateWork = async (req, res) => {
 
     // Obtener tasa de comisión del servicio
     const [services] = await connection.query(
-      'SELECT manicurist_commission_rate FROM Services WHERE service_id = ?',
+      'SELECT manicurist_commission_rate FROM services WHERE service_id = ?',
       [works[0].service_id]
     );
 
@@ -242,7 +242,7 @@ const createWorkAdmin = async (req, res) => {
 
     // Verificar que el usuario es manicurista
     const [manicurists] = await connection.query(
-      'SELECT user_id FROM Users WHERE user_id = ? AND role_id = 2',
+      'SELECT user_id FROM users WHERE user_id = ? AND role_id = 2',
       [manicurist_id]
     );
 
@@ -253,7 +253,7 @@ const createWorkAdmin = async (req, res) => {
 
     // Obtener información del servicio
     const [services] = await connection.query(
-      'SELECT duration_min, price, manicurist_commission_rate FROM Services WHERE service_id = ?',
+      'SELECT duration_min, price, manicurist_commission_rate FROM services WHERE service_id = ?',
       [service_id]
     );
 
@@ -325,8 +325,8 @@ const getAllWorks = async (req, res) => {
         c.is_paid,
         c.payment_date
       FROM Appointments a
-      JOIN Users u ON a.manicurist_id = u.user_id
-      JOIN Services s ON a.service_id = s.service_id
+      JOIN users u ON a.manicurist_id = u.user_id
+      JOIN services s ON a.service_id = s.service_id
       LEFT JOIN Commissions c ON a.appointment_id = c.appointment_id
       WHERE a.is_walkin = TRUE
     `;

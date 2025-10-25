@@ -5,7 +5,7 @@ const getServices = async (req, res) => {
   try {
     const connection = await pool.getConnection();
     const [services] = await connection.query(
-      `SELECT service_id, name, description, price, duration_min, manicurist_commission_rate FROM Services`
+      `SELECT service_id, name, description, price, duration_min, manicurist_commission_rate FROM services`
     );
     await connection.release();
 
@@ -27,7 +27,7 @@ const createService = async (req, res) => {
 
     const connection = await pool.getConnection();
     await connection.query(
-      `INSERT INTO Services (name, description, price, duration_min, manicurist_commission_rate) 
+      `INSERT INTO services (name, description, price, duration_min, manicurist_commission_rate) 
        VALUES (?, ?, ?, ?, ?)`,
       [name, description || null, price, duration_min, manicurist_commission_rate]
     );
@@ -48,7 +48,7 @@ const updateService = async (req, res) => {
 
     const connection = await pool.getConnection();
     await connection.query(
-      `UPDATE Services 
+      `UPDATE services 
        SET name = ?, description = ?, price = ?, duration_min = ?, manicurist_commission_rate = ? 
        WHERE service_id = ?`,
       [name, description || null, price, duration_min, manicurist_commission_rate, id]
@@ -81,7 +81,7 @@ const deleteService = async (req, res) => {
       });
     }
 
-    await connection.query('DELETE FROM Services WHERE service_id = ?', [id]);
+    await connection.query('DELETE FROM services WHERE service_id = ?', [id]);
     await connection.release();
 
     res.json({ message: 'Servicio eliminado exitosamente' });
