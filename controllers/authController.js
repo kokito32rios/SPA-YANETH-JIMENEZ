@@ -2,90 +2,71 @@ const pool = require('../config/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+// =========================
 // REGISTRO DE USUARIO
+// =========================
 const register = async (req, res) => {
   try {
     const { first_name, last_name, email, password, phone_number } = req.body;
 
-    // Validar datos
+    // Validar datos obligatorios
     if (!first_name || !last_name || !email || !password) {
-      return res.status(400).json({ 
-        message: 'Todos los campos son obligatorios' 
-      });
+      return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
-    // Validar formato email
+    // Validar formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ 
-        message: 'Email inválido' 
-      });
+      return res.status(400).json({ message: 'Email inválido' });
     }
 
-    const connection = await pool.getConnection();
-
     // Verificar si el email ya existe
-    const [existingUser] = await connection.query(
+    const [existingUser] = await pool.query(
       'SELECT email FROM users WHERE email = ?',
       [email]
     );
 
     if (existingUser.length > 0) {
-      await connection.release();
-      return res.status(400).json({ 
-        message: 'El email ya está registrado' 
-      });
+      return res.status(400).json({ message: 'El email ya está registrado' });
     }
 
     // Encriptar contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insertar usuario (role_id = 3 para cliente por defecto)
-    await connection.query(
+    // Insertar usuario (role_id = 3 por defecto)
+    await pool.query(
       'INSERT INTO users (role_id, first_name, last_name, email, password_hash, phone_number) VALUES (?, ?, ?, ?, ?, ?)',
       [3, first_name, last_name, email, hashedPassword, phone_number || null]
     );
 
-    await connection.release();
-
-    res.status(201).json({ 
-      message: 'Usuario registrado exitosamente' 
-    });
+    res.status(201).json({ message: 'Usuario registrado exitosamente' });
 
   } catch (error) {
     console.error('Error en registro:', error);
-    res.status(500).json({ 
-      message: 'Error al registrar usuario' 
-    });
+    res.status(500).json({ message: 'Error al registrar usuario' });
   }
 };
 
+// =========================
 // LOGIN DE USUARIO
+// =========================
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validar datos
+    // Validar datos obligatorios
     if (!email || !password) {
-      return res.status(400).json({ 
-        message: 'Email y contraseña son obligatorios' 
-      });
+      return res.status(400).json({ message: 'Email y contraseña son obligatorios' });
     }
 
-    const connection = await pool.getConnection();
-
     // Buscar usuario por email
-    const [users] = await connection.query(
+    const [users] = await pool.query(
       'SELECT user_id, role_id, first_name, last_name, email, password_hash FROM users WHERE email = ?',
       [email]
     );
 
-    await connection.release();
-
     if (users.length === 0) {
-      return res.status(401).json({ 
-        message: 'Email o contraseña incorrectos' 
-      });
+      return res.status(401).json({ message: 'Email o contraseña incorrectos' });
     }
 
     const user = users[0];
@@ -94,9 +75,7 @@ const login = async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password_hash);
 
     if (!passwordMatch) {
-      return res.status(401).json({ 
-        message: 'Email o contraseña incorrectos' 
-      });
+      return res.status(401).json({ message: 'Email o contraseña incorrectos' });
     }
 
     // Crear token JWT
@@ -114,7 +93,7 @@ const login = async (req, res) => {
 
     res.json({
       message: 'Login exitoso',
-      token: token,
+      token,
       user: {
         user_id: user.user_id,
         role_id: user.role_id,
@@ -126,9 +105,7 @@ const login = async (req, res) => {
 
   } catch (error) {
     console.error('Error en login:', error);
-    res.status(500).json({ 
-      message: 'Error al iniciar sesión' 
-    });
+    res.status(500).json({ message: 'Error al iniciar sesión' });
   }
 };
 
