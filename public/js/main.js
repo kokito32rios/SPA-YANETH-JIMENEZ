@@ -1327,7 +1327,7 @@ async function loadMyWorks(startDate = null, endDate = null) {
     tbody.innerHTML = data.works.map(work => `
       <tr>
         <td>${new Date(work.work_date).toLocaleString('es-CO')}</td>
-        <td>${work.client_name || 'Cliente Walk-in'}</td>
+        <!-- <td>${work.client_name || 'Cliente Walk-in'}</td> -->
         <td>${work.service_name}</td>
         <td>${formatCurrency(work.paid_price)}</td>
         <td style="color: #2e7d32; font-weight: bold;">${formatCurrency(work.commission_amount)}</td>
