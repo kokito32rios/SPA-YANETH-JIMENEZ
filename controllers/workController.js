@@ -78,7 +78,6 @@ const getMyWorks = async (req, res) => {
       SELECT 
         a.appointment_id as work_id,
         a.start_time as work_date,
-        a.client_name_walkin as client_name,
         s.name as service_name,
         s.price as default_price,
         c.service_price as paid_price,
